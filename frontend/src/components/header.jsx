@@ -18,8 +18,6 @@ const Header = () => {
             type="text"
             placeholder="search product here..."
             className="w-full outline-none"
-            // onChange={handleSearch}
-            // value={search}
           />
 
           <div className="min-w-[50px] h-10 flex items-center justify-center rounded-r-full text-gray-600 cursor-pointer hover:text-violet-600 transition-all duration-300">
@@ -41,8 +39,18 @@ const Header = () => {
             </div>
           </div>
           <div>
-            <Link to="/login" className="px-6 bg-black text-white rounded-sm py-2 hover:bg-gray-800 shadow-md">
+            <Link
+              to="/login"
+              className="inline-flex items-center justify-center gap-1 px-4 py-1.5
+bg-gradient-to-r from-black to-gray-800
+text-white text-base font-semibold rounded-lg
+shadow-md shadow-gray-500/20
+hover:from-gray-800 hover:to-gray-700
+hover:shadow-lg hover:-translate-y-0.5
+transition-all duration-300"
+            >
               Login
+              <span className="text-lg">→</span>
             </Link>
           </div>
         </div>

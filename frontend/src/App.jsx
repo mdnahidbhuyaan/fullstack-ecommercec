@@ -5,11 +5,11 @@ import Header from "./components/header";
 const App = () => {
   return (
     <>
-      <Header/>
-      <main>
-        <Outlet/>
+      <Header />
+      <main className="min-h-[calc(100vh-120px)]">
+        <Outlet />
       </main>
-      <Footer/>
+      <Footer />
     </>
   );
 };
