@@ -7,6 +7,8 @@ import { FaEyeSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import imageTobase64 from "../helpers/imageTobase64";
 import SummaryApi from "../common";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 const signUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -17,6 +19,7 @@ const signUp = () => {
     confirmPassword: "",
     profilepic: "",
   });
+  const navigate = useNavigate();
   const handleOnChange = (e) => {
     const { name, value } = e.target;
     setData((preve) => {
@@ -32,6 +35,7 @@ const signUp = () => {
     setData((preve) => {
       return {
         ...preve,
+        role: "GENERAL",
         profilepic: imagePic,
       };
     });
@@ -39,9 +43,8 @@ const signUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if(data.password === data.confirmPassword){
-     console.log(SummaryApi.signUP.url,"summaryapi");
-      const dataResponse = await fetch("http://localhost:8080/api/signup", {
+    if (data.password === data.confirmPassword) {
+      const dataResponse = await fetch(SummaryApi.signUP.url, {
         method: SummaryApi.signUP.method,
         headers: {
           "content-Type": "application/json",
@@ -49,12 +52,18 @@ const signUp = () => {
         body: JSON.stringify(data),
       });
       const dataApi = await dataResponse.json();
-      console.log(dataApi, "dataapi ");
-    }else{
+      if (dataApi.success) {
+        toast.success(dataApi.message);
+        navigate("/login");
+      }
+      if (dataApi.error) {
+        toast.error(dataApi.message);
+      }
+    } else {
       console.log("password check password");
     }
   };
-  console.log(data, "data");
+
   return (
     <section
       id="signUp"
@@ -158,7 +167,7 @@ const signUp = () => {
                   onChange={handleOnChange}
                   required
                   autoComplete="email"
-                  className="w-full mt-2 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl outline-none text-sm focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all duration-300"
+                  className="w-full mt-2 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl outline-none text-sm focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all duration-300 font-semibold"
                 />
               </div>
 

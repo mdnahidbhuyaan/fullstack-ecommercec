@@ -6,7 +6,7 @@ async function userSignUpController(req, res) {
     // Get user information
     const { email, password, name } = req.body;
 
-    console.log(req.body, "req.body");
+    // console.log(req.body, "req.body");
 
     // Validate required fields
     if (!name || !email || !password) {
