@@ -4,7 +4,7 @@ const userModel = require("../models/userModel");
 async function userSignUpController(req, res) {
   try {
     // Get user information
-    const { email, password, name } = req.body;
+  const { email, password, name, profilePic } = req.body;
 
     // console.log(req.body, "req.body");
 
@@ -37,6 +37,7 @@ async function userSignUpController(req, res) {
       name,
       email,
       password: hashPassword,
+      profilePic,
     };
 
     // Save user to database

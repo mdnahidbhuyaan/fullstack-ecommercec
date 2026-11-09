@@ -17,7 +17,7 @@ const signUp = () => {
     password: "",
     name: "",
     confirmPassword: "",
-    profilepic: "",
+    profilePic: "",
   });
   const navigate = useNavigate();
   const handleOnChange = (e) => {
@@ -36,7 +36,7 @@ const signUp = () => {
       return {
         ...preve,
         role: "GENERAL",
-        profilepic: imagePic,
+        profilePic: imagePic,
       };
     });
   };
@@ -113,7 +113,7 @@ const signUp = () => {
             <div className="flex justify-center mb-6">
               <div className="w-24 h-24 relative rounded-full overflow-hidden border-4 border-indigo-100 shadow-lg group">
                 <img
-                  src={data.profilepic || loginIcons}
+                  src={data.profilePic || loginIcons}
                   alt="Profile"
                   className="w-full h-full object-cover"
                 />
