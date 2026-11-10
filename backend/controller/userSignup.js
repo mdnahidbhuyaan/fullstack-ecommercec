@@ -38,6 +38,7 @@ async function userSignUpController(req, res) {
       email,
       password: hashPassword,
       profilePic,
+      role: "GENERAL",
     };
 
     // Save user to database

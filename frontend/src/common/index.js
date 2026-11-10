@@ -13,6 +13,9 @@ const SummaryApi = {
     url: `${backendDomin}/api/user-details`,
     method: "get",
   },
+  logout_url: {
+    url: `${backendDomin}/api/userLogout`,
+  },
 };
 
 export default SummaryApi;
