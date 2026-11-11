@@ -23,7 +23,7 @@ const App = () => {
       if (dataApi.success) {
         dispatch(setUserDetails(dataApi.data));
       }
-      console.log("data-user", dataResponse);
+  
     } catch (error) {
       console.log("Fetch Error:", error);
     }

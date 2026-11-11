@@ -3,3 +3,15 @@
 body{
   @apply bg-slate-100
 }
+
+
+/* userTable  */
+.userTable{
+  @apply bg-white
+}
+.userTable th {
+  @apply border border-gray-200 text-base font-medium;
+}
+.userTable td{
+  @apply border border-gray-200 text-base text-center
+}
