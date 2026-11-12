@@ -1,12 +1,17 @@
 /* eslint-disable react-hooks/set-state-in-effect */
-/* eslint-disable no-undef */
-/* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from "react";
+
+import  { useEffect, useState } from "react";
 import SummaryApi from "../common";
 import { toast } from "react-toastify";
 import moment from "moment";
+import { MdModeEditOutline } from "react-icons/md";
+import ChangeUserRole from "../components/changeUserRole";
+
+
+
 const AllUsers = () => {
   const [allUser, setAllUsers] = useState([]);
+  const [openUpdateRole, setOpenUpdateRole] = useState(false);
   const fetchAllUsers = async () => {
     const fetchData = await fetch(SummaryApi.allUser.url, {
       method: SummaryApi.allUser.method,
@@ -34,7 +39,8 @@ const AllUsers = () => {
             <th>Name</th>
             <th>Email</th>
             <th>Role</th>
-            <th>created Date</th>
+            <th>Created Date</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -46,11 +52,22 @@ const AllUsers = () => {
                 <td>{el?.email}</td>
                 <td>{el?.role}</td>
                 <td>{moment(el?.createdAt).format("LL")}</td>
+                <td>
+                  <button className="bg-green-100 p-2 rounded-full cursor-pointer hover:bg-green-500 hover:text-white" onClick={()=>setOpenUpdateRole(true)}>
+                    <MdModeEditOutline className=""/>
+                  </button>
+                </td>
               </tr>
             );
           })}
         </tbody>
       </table>
+      {
+        openUpdateRole && (
+          <ChangeUserRole />
+
+        )
+      }
     </div>
   );
 };
