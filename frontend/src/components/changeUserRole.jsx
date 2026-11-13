@@ -2,7 +2,9 @@ import ROLE from "../common/role";
 import { IoMdClose } from "react-icons/io";
 import { useState } from "react";
 import SummaryApi from "../common";
-const ChangeUserRole = ({ name, email, role, onClose }) => {
+import { toast } from "react-toastify";
+
+const ChangeUserRole = ({ name, email, role, onClose, userId, callFunc }) => {
   const [userRole, setUserRole] = useState(role);
   const handleOnChangeSelect = (e) => {
     setUserRole(e.target.value);
@@ -10,23 +12,29 @@ const ChangeUserRole = ({ name, email, role, onClose }) => {
     console.log(e.target.value);
   };
 
-  const updateUserRole = async()=>{
- const fetchResponse = await fetch(SummaryApi.updateUser.url, {
-   method: SummaryApi.updateUser.method,
-   credentials: "include",
-   headers: {
-     "content-type": "application/json",
-   },
-   body: JSON.stringify({
-     role: userRole,
-   }),
- });
-     const responseData = await fetchResponse.json();
-     console.log("responseData",responseData)
-  }
+  const updateUserRole = async () => {
+    const fetchResponse = await fetch(SummaryApi.updateUser.url, {
+      method: SummaryApi.updateUser.method,
+      credentials: "include",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: userId,
+        role: userRole,
+      }),
+    });
+    const responseData = await fetchResponse.json();
+    if (responseData.success) {
+      toast.success(responseData.message);
+      onClose();
+      callFunc();
+    }
+    console.log("responseData", responseData);
+  };
 
   return (
-    <div className="fixed top-0 bottom-0 left-0 right-0 w-full h-full z-10 flex justify-between items-center">
+    <div className="fixed top-0 bottom-0 left-0 right-0 w-full h-full z-10 flex justify-between items-center bg-slate-100/50">
       <div className="mx-auto bg-white shadow-md p-4 w-full max-w-sm rounded-md">
         <button className="block ml-auto" onClick={onClose}>
           <IoMdClose />

@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { setUserDetails } from "../store/userSlice";
 import { useState } from "react";
+import ROLE from "../common/role";
 
 const Header = () => {
   const user = useSelector((state) => state?.user?.user);
@@ -72,6 +73,9 @@ const Header = () => {
             {menuDisplay && (
               <div className="absolute bg-white bottom-0 top-11 h-fit p-2 shadow-md rounded">
                 <nav>
+                  {
+                    user?.role === ROLE.ADMIN && (
+
                   <Link
                     to={"admin-panel"}
                     className="whitespace-nowrap hidden md:block hover:bg-gray-100 p-2"
@@ -79,6 +83,8 @@ const Header = () => {
                   >
                     Admin panel
                   </Link>
+                    )
+                  }
                 </nav>
               </div>
             )}
