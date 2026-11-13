@@ -16,7 +16,6 @@ const Header = () => {
   const dispatch = useDispatch();
   const [menuDisplay, setMenuDisplay] = useState(false);
 
-
   const handleLogout = async () => {
     const fetchData = await fetch(SummaryApi.logout_url.url, {
       method: SummaryApi.logout_url.method,
@@ -56,35 +55,34 @@ const Header = () => {
 
         <div className="flex items-center gap-6">
           <div className="relative  flex justify-center">
-            <div
-              className="text-3xl cursor-pointer relative flex justify-center"
-              onClick={() => setMenuDisplay((preve) => !preve)}
-            >
-              {user?.profilePic ? (
-                <img
-                  src={user.profilePic}
-                  className="w-10 h-10 rounded-full object-cover"
-                  alt={user?.name}
-                />
-              ) : (
-                <FaUsers />
-              )}
-            </div>
+            {user?._id && (
+              <div
+                className="text-3xl cursor-pointer relative flex justify-center"
+                onClick={() => setMenuDisplay((preve) => !preve)}
+              >
+                {user?.profilePic ? (
+                  <img
+                    src={user.profilePic}
+                    className="w-10 h-10 rounded-full object-cover"
+                    alt={user?.name}
+                  />
+                ) : (
+                  <FaUsers />
+                )}
+              </div>
+            )}
             {menuDisplay && (
               <div className="absolute bg-white bottom-0 top-11 h-fit p-2 shadow-md rounded">
                 <nav>
-                  {
-                    user?.role === ROLE.ADMIN && (
-
-                  <Link
-                    to={"admin-panel"}
-                    className="whitespace-nowrap hidden md:block hover:bg-gray-100 p-2"
-                    onClick={() => setMenuDisplay((preve) => !preve)}
-                  >
-                    Admin panel
-                  </Link>
-                    )
-                  }
+                  {user?.role === ROLE.ADMIN && (
+                    <Link
+                      to={"/admin-panel/all-products"}
+                      className="whitespace-nowrap hidden md:block hover:bg-gray-100 p-2"
+                      onClick={() => setMenuDisplay((preve) => !preve)}
+                    >
+                      Admin panel
+                    </Link>
+                  )}
                 </nav>
               </div>
             )}
@@ -135,4 +133,3 @@ const Header = () => {
   );
 };
 export default Header;
-
