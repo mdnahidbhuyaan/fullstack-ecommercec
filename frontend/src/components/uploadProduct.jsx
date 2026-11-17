@@ -4,6 +4,7 @@ import { useState } from "react";
 import productCategory from "../helpers/productCategory";
 import { MdCloudUpload } from "react-icons/md";
 import UploadImage from "../helpers/uploadImage";
+import DisplayImage from "./displayImage";
 
 const UploadProduct = ({ onClose }) => {
   const [data, setData] = useState({
@@ -15,7 +16,8 @@ const UploadProduct = ({ onClose }) => {
     price: "",
     sellingPrice: "",
   });
-  const [uploadProductImageInput, setUploadProductImageInput] = useState("");
+  const [openFullScreenImg,setOpenFullScreenImg] = useState(false)
+const [fullScreenImg,setFullScreenImg] = useState("")
 
   const handleOnChange = () => {
     // const { name, value } = e.target;
@@ -28,8 +30,7 @@ const UploadProduct = ({ onClose }) => {
   };
   const handleUploadProduct = async(e)=>{
     const file = e.target.files[0];
-    setUploadProductImageInput(file.name)
-    console.log("file",file);
+
     const uploadImageCloudinary = await UploadImage(file);
     setData((preve)=>{
       return{
@@ -38,7 +39,7 @@ const UploadProduct = ({ onClose }) => {
 
       }
     })
-    console.log("upload Image", uploadImageCloudinary.url);
+   
   }
 
 
@@ -121,10 +122,14 @@ const UploadProduct = ({ onClose }) => {
                   return (
                     <img
                       src={el}
-                      alt="el"
+                      alt={el}
                       width={80}
                       height={80}
-                      className="bg-slate-200  rounded-md  "
+                      className="bg-slate-200 rounded-md cursor-pointer "
+                      onClick={()=>{
+                     setOpenFullScreenImg(true)
+                     setFullScreenImg(el)
+                      }}
                     />
                   );
                 })}
@@ -139,6 +144,10 @@ const UploadProduct = ({ onClose }) => {
           </button>
         </form>
       </div>
+      {/* display img full screnn  */}
+      {openFullScreenImg && (
+        <DisplayImage onClose={() => setOpenFullScreenImg(false)} imgUrl={fullScreenImg} />
+      )}
     </div>
   );
 };
