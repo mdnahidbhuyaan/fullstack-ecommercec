@@ -5,6 +5,10 @@ import productCategory from "../helpers/productCategory";
 import { MdCloudUpload } from "react-icons/md";
 import UploadImage from "../helpers/uploadImage";
 import DisplayImage from "./displayImage";
+import { MdDelete } from "react-icons/md";
+import SummaryApi from "../common";
+import { toast } from "react-toastify";
+
 
 const UploadProduct = ({ onClose }) => {
   const [data, setData] = useState({
@@ -16,34 +20,62 @@ const UploadProduct = ({ onClose }) => {
     price: "",
     sellingPrice: "",
   });
-  const [openFullScreenImg,setOpenFullScreenImg] = useState(false)
-const [fullScreenImg,setFullScreenImg] = useState("")
+  const [openFullScreenImg, setOpenFullScreenImg] = useState(false);
+  const [fullScreenImg, setFullScreenImg] = useState("");
 
-  const handleOnChange = () => {
-    // const { name, value } = e.target;
-    // setData((preve) => {
-    //   return {
-    //     ...preve,
-    //     [name]: value,
-    //   };
-    // });
+  const handleOnChange = (e) => {
+    const { name, value } = e.target;
+    setData((preve) => {
+      return {
+        ...preve,
+        [name]: value,
+      };
+    });
   };
-  const handleUploadProduct = async(e)=>{
+  const handleUploadProduct = async (e) => {
     const file = e.target.files[0];
 
     const uploadImageCloudinary = await UploadImage(file);
-    setData((preve)=>{
-      return{
+    setData((preve) => {
+      return {
         ...preve,
-        productImage : [...preve.productImage, uploadImageCloudinary.url]
-
-      }
-    })
-   
-  }
-
-
-
+        productImage: [...preve.productImage, uploadImageCloudinary.url],
+      };
+    });
+  };
+  const handleDeleteProductImage = async (index) => {
+    console.log("image index", index);
+    const newProductImage = [...data.productImage];
+    newProductImage.splice(index, 1);
+    setData((preve) => {
+      return {
+        ...preve,
+        productImage: [...newProductImage],
+      };
+    });
+  };
+    {/**upload product */}
+  const handleSubmit = async(e) =>{
+    e.preventDefault()
+        const response = await fetch(SummaryApi.uploadProduct.url, {
+          method: SummaryApi.uploadProduct.method,
+          credentials: "include",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+      const responseData = await response.json();
+          if (responseData.success) {
+            toast.success(responseData?.message);
+            onClose()
+       
+          }
+          
+    if (responseData.error) {
+      toast.error(responseData?.message);
+    }
+    }
   return (
     <div className="fixed w-full  h-full bg-slate-200/40 top-0 left-0 right-0 bottom-0 flex justify-center items-center">
       <div className="bg-white p-4 rounded w-full max-w-2xl h-full max-h-[80%] overflow-hidden">
@@ -53,7 +85,10 @@ const [fullScreenImg,setFullScreenImg] = useState("")
             <IoClose onClick={onClose} />
           </div>
         </div>
-        <form className="grid p-4 gap-3 overflow-y-scroll h-full pb-5">
+        <form
+          className="grid p-4 gap-3 overflow-y-scroll h-full pb-5"
+          onSubmit={handleSubmit}
+        >
           <label htmlFor="productName" className="font-semibold">
             Product Name :{" "}
           </label>
@@ -65,7 +100,7 @@ const [fullScreenImg,setFullScreenImg] = useState("")
             value={data.productName}
             onChange={handleOnChange}
             className="p-2 bg-slate-100 rounded outline-none"
-            // required
+            required
           />
           <label htmlFor="brandName" className="mt-3 font-semibold">
             Brand Name :
@@ -86,7 +121,11 @@ const [fullScreenImg,setFullScreenImg] = useState("")
           <select
             className="p-2 bg-slate-100 rounded outline-none"
             value={data.category}
+            name="category"
+            onChange={handleOnChange}
+            required
           >
+            <option value={""}>Select Category</option>
             {productCategory.map((el, index) => {
               return (
                 <option value={el.value} key={el.value + index}>
@@ -118,19 +157,27 @@ const [fullScreenImg,setFullScreenImg] = useState("")
           <div>
             {data?.productImage[0] ? (
               <div className="flex items-center gap-2">
-                {data.productImage.map((el) => {
+                {data.productImage.map((el, index) => {
                   return (
-                    <img
-                      src={el}
-                      alt={el}
-                      width={80}
-                      height={80}
-                      className="bg-slate-200 rounded-md cursor-pointer "
-                      onClick={()=>{
-                     setOpenFullScreenImg(true)
-                     setFullScreenImg(el)
-                      }}
-                    />
+                    <div className="relative group">
+                      <img
+                        src={el}
+                        alt={el}
+                        width={80}
+                        height={80}
+                        className="bg-slate-200 rounded-md cursor-pointer "
+                        onClick={() => {
+                          setOpenFullScreenImg(true);
+                          setFullScreenImg(el);
+                        }}
+                      />
+                      <div
+                        className="absolute bottom-0 right-0 p-1 text-white bg-red-600 rounded-full hidden group-hover:block cursor-pointer"
+                        onClick={() => handleDeleteProductImage(index)}
+                      >
+                        <MdDelete />
+                      </div>
+                    </div>
                   );
                 })}
               </div>
@@ -138,7 +185,43 @@ const [fullScreenImg,setFullScreenImg] = useState("")
               <p> * Place Upload Product Image</p>
             )}
           </div>
-
+          <label htmlFor="price" className="mt-3 font-semibold">
+            Price :
+          </label>
+          <input
+            type="number"
+            id="price"
+            placeholder="enter price"
+            value={data.price}
+            name="price"
+            onChange={handleOnChange}
+            className="p-2 bg-slate-100 rounded outline-none"
+            required
+          />
+          <label htmlFor="sellingPrice" className="mt-3">
+            Selling Price :
+          </label>
+          <input
+            type="number"
+            id="sellingPrice"
+            placeholder="enter selling price"
+            value={data.sellingPrice}
+            name="sellingPrice"
+            onChange={handleOnChange}
+            className="p-2 bg-slate-100 rounded outline-none"
+            required
+          />
+          <label htmlFor="description" className="mt-3">
+            Description :
+          </label>
+          <textarea
+            className="h-28 bg-slate-100 resize-none p-2 outline-none"
+            placeholder="enter product description"
+            rows={3}
+            onChange={handleOnChange}
+            name="description"
+            value={data.description}
+          ></textarea>
           <button className="px-6 py-2 mb-10 bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-semibold rounded-lg shadow-md hover:from-violet-700 hover:to-indigo-700 hover:shadow-lg active:scale-95 transition-all duration-300">
             Upload Product
           </button>
@@ -146,7 +229,10 @@ const [fullScreenImg,setFullScreenImg] = useState("")
       </div>
       {/* display img full screnn  */}
       {openFullScreenImg && (
-        <DisplayImage onClose={() => setOpenFullScreenImg(false)} imgUrl={fullScreenImg} />
+        <DisplayImage
+          onClose={() => setOpenFullScreenImg(false)}
+          imgUrl={fullScreenImg}
+        />
       )}
     </div>
   );
