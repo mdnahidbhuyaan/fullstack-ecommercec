@@ -1,8 +1,25 @@
+/* eslint-disable react-hooks/set-state-in-effect */
+import { useEffect } from "react";
+import SummaryApi from "../common";
 import UploadProduct from "../components/uploadProduct";
 import { useState } from "react";
+import AdminProductCard from "../components/adminProductCard";
 
 const AllProducts = () => {
-    const [openUploadProduct, setOpenUploadProduct] = useState(false);
+  const [openUploadProduct, setOpenUploadProduct] = useState(false);
+  const [allProducts, setAllProducts] = useState([]);
+
+  const fetchAllProduct = async () => {
+    const response = await fetch(SummaryApi.allProduct.url);
+    const dataResponse = await response.json();
+    console.log("response data", dataResponse);
+    setAllProducts(dataResponse?.data || []);
+  };
+
+  useEffect(() => {
+    fetchAllProduct();
+  }, []);
+
   return (
     <div>
       <div className="bg-white py-2 px-4 flex justify-between items-center ">
@@ -19,18 +36,31 @@ const AllProducts = () => {
   hover:-translate-y-0.5
   active:scale-95
   transition-all duration-300"
-  onClick={() =>setOpenUploadProduct(true)}
+          onClick={() => setOpenUploadProduct(true)}
         >
           Upload Product
         </button>
       </div>
-      {/* upload productComponents  */}
-      {
-        openUploadProduct && (
+      {/* all product */}
 
-          <UploadProduct onClose={()=>setOpenUploadProduct(false)}/>
-        )
-      }
+      <div className="flex items-center flex-wrap gap-9 py-4 overflow-y-scroll">
+        {allProducts.map((product, index) => {
+          return (
+            <AdminProductCard
+              data={product}
+              key={index + "allProduct"}
+              fetchdata={fetchAllProduct}
+            />
+          );
+        })}
+      </div>
+      {/* upload productComponents  */}
+      {openUploadProduct && (
+        <UploadProduct
+          onClose={() => setOpenUploadProduct(false)}
+          fetchdata={fetchAllProduct}
+        />
+      )}
     </div>
   );
 };
